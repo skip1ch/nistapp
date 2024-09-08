@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "820501035946",
+    "project_id": "nisapp-zdp3u0",
+    "storage_bucket": "nisapp-zdp3u0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820501035946:android:78b59b45b1a5b9c75189d3",
+        "android_client_info": {
+          "package_name": "com.mycompany.nisapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXR-NNKONO2WRMubvth_H0BsxerJXK1fM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820501035946:android:ee38e1b89b5153c95189d3",
+        "android_client_info": {
+          "package_name": "com.mycompany.nistap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXR-NNKONO2WRMubvth_H0BsxerJXK1fM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
