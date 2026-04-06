@@ -7,7 +7,9 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/flutter_flow/upload_data.dart';
+import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'fill_profile_page_widget.dart' show FillProfilePageWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -18,10 +20,10 @@ import 'package:provider/provider.dart';
 class FillProfilePageModel extends FlutterFlowModel<FillProfilePageWidget> {
   ///  State fields for stateful widgets in this page.
 
-  bool isDataUploading = false;
-  FFUploadedFile uploadedLocalFile =
-      FFUploadedFile(bytes: Uint8List.fromList([]));
-  String uploadedFileUrl = '';
+  bool isDataUploading_uploadDataIvr = false;
+  FFUploadedFile uploadedLocalFile_uploadDataIvr =
+      FFUploadedFile(bytes: Uint8List.fromList([]), originalFilename: '');
+  String uploadedFileUrl_uploadDataIvr = '';
 
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;

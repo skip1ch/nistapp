@@ -5,8 +5,8 @@ import '../base_auth_user_provider.dart';
 
 export '../base_auth_user_provider.dart';
 
-class NisappFirebaseUser extends BaseAuthUser {
-  NisappFirebaseUser(this.user);
+class QostapFirebaseUser extends BaseAuthUser {
+  QostapFirebaseUser(this.user);
   User? user;
   bool get loggedIn => user != null;
 
@@ -32,6 +32,11 @@ class NisappFirebaseUser extends BaseAuthUser {
   }
 
   @override
+  Future? updatePassword(String newPassword) async {
+    await user?.updatePassword(newPassword);
+  }
+
+  @override
   Future? sendEmailVerification() => user?.sendEmailVerification();
 
   @override
@@ -53,17 +58,17 @@ class NisappFirebaseUser extends BaseAuthUser {
 
   static BaseAuthUser fromUserCredential(UserCredential userCredential) =>
       fromFirebaseUser(userCredential.user);
-  static BaseAuthUser fromFirebaseUser(User? user) => NisappFirebaseUser(user);
+  static BaseAuthUser fromFirebaseUser(User? user) => QostapFirebaseUser(user);
 }
 
-Stream<BaseAuthUser> nisappFirebaseUserStream() => FirebaseAuth.instance
+Stream<BaseAuthUser> qostapFirebaseUserStream() => FirebaseAuth.instance
         .authStateChanges()
         .debounce((user) => user == null && !loggedIn
             ? TimerStream(true, const Duration(seconds: 1))
             : Stream.value(user))
         .map<BaseAuthUser>(
       (user) {
-        currentUser = NisappFirebaseUser(user);
+        currentUser = QostapFirebaseUser(user);
         return currentUser!;
       },
     );

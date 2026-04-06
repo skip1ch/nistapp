@@ -96,6 +96,36 @@ class UsersRecord extends FirestoreRecord {
   int get usercreatedteachernumber => _usercreatedteachernumber ?? 0;
   bool hasUsercreatedteachernumber() => _usercreatedteachernumber != null;
 
+  // "admin" field.
+  bool? _admin;
+  bool get admin => _admin ?? false;
+  bool hasAdmin() => _admin != null;
+
+  // "moderator" field.
+  bool? _moderator;
+  bool get moderator => _moderator ?? false;
+  bool hasModerator() => _moderator != null;
+
+  // "liked_events" field.
+  List<DocumentReference>? _likedEvents;
+  List<DocumentReference> get likedEvents => _likedEvents ?? const [];
+  bool hasLikedEvents() => _likedEvents != null;
+
+  // "user_joined_clubs" field.
+  List<DocumentReference>? _userJoinedClubs;
+  List<DocumentReference> get userJoinedClubs => _userJoinedClubs ?? const [];
+  bool hasUserJoinedClubs() => _userJoinedClubs != null;
+
+  // "number_of_joined_clubs" field.
+  int? _numberOfJoinedClubs;
+  int get numberOfJoinedClubs => _numberOfJoinedClubs ?? 0;
+  bool hasNumberOfJoinedClubs() => _numberOfJoinedClubs != null;
+
+  // "usercreatedeventsnumber" field.
+  int? _usercreatedeventsnumber;
+  int get usercreatedeventsnumber => _usercreatedeventsnumber ?? 0;
+  bool hasUsercreatedeventsnumber() => _usercreatedeventsnumber != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -116,6 +146,14 @@ class UsersRecord extends FirestoreRecord {
         castToType<int>(snapshotData['usercreatedclubsnumber']);
     _usercreatedteachernumber =
         castToType<int>(snapshotData['usercreatedteachernumber']);
+    _admin = snapshotData['admin'] as bool?;
+    _moderator = snapshotData['moderator'] as bool?;
+    _likedEvents = getDataList(snapshotData['liked_events']);
+    _userJoinedClubs = getDataList(snapshotData['user_joined_clubs']);
+    _numberOfJoinedClubs =
+        castToType<int>(snapshotData['number_of_joined_clubs']);
+    _usercreatedeventsnumber =
+        castToType<int>(snapshotData['usercreatedeventsnumber']);
   }
 
   static CollectionReference get collection =>
@@ -168,6 +206,10 @@ Map<String, dynamic> createUsersRecordData({
   bool? userJoined,
   int? usercreatedclubsnumber,
   int? usercreatedteachernumber,
+  bool? admin,
+  bool? moderator,
+  int? numberOfJoinedClubs,
+  int? usercreatedeventsnumber,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -187,6 +229,10 @@ Map<String, dynamic> createUsersRecordData({
       'user_joined': userJoined,
       'usercreatedclubsnumber': usercreatedclubsnumber,
       'usercreatedteachernumber': usercreatedteachernumber,
+      'admin': admin,
+      'moderator': moderator,
+      'number_of_joined_clubs': numberOfJoinedClubs,
+      'usercreatedeventsnumber': usercreatedeventsnumber,
     }.withoutNulls,
   );
 
@@ -198,6 +244,7 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
 
   @override
   bool equals(UsersRecord? e1, UsersRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.email == e2?.email &&
         e1?.displayName == e2?.displayName &&
         e1?.photoUrl == e2?.photoUrl &&
@@ -213,7 +260,13 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.lastNotificationReadTime == e2?.lastNotificationReadTime &&
         e1?.userJoined == e2?.userJoined &&
         e1?.usercreatedclubsnumber == e2?.usercreatedclubsnumber &&
-        e1?.usercreatedteachernumber == e2?.usercreatedteachernumber;
+        e1?.usercreatedteachernumber == e2?.usercreatedteachernumber &&
+        e1?.admin == e2?.admin &&
+        e1?.moderator == e2?.moderator &&
+        listEquality.equals(e1?.likedEvents, e2?.likedEvents) &&
+        listEquality.equals(e1?.userJoinedClubs, e2?.userJoinedClubs) &&
+        e1?.numberOfJoinedClubs == e2?.numberOfJoinedClubs &&
+        e1?.usercreatedeventsnumber == e2?.usercreatedeventsnumber;
   }
 
   @override
@@ -233,7 +286,13 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.lastNotificationReadTime,
         e?.userJoined,
         e?.usercreatedclubsnumber,
-        e?.usercreatedteachernumber
+        e?.usercreatedteachernumber,
+        e?.admin,
+        e?.moderator,
+        e?.likedEvents,
+        e?.userJoinedClubs,
+        e?.numberOfJoinedClubs,
+        e?.usercreatedeventsnumber
       ]);
 
   @override

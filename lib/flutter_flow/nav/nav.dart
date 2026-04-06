@@ -8,7 +8,6 @@ import '/backend/backend.dart';
 
 import '/auth/base_auth_user_provider.dart';
 
-import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/lat_lng.dart';
@@ -16,10 +15,14 @@ import '/flutter_flow/place.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'serialization_util.dart';
 
+import '/index.dart';
+
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
 
 const kTransitionInfoKey = '__transition_info__';
+
+GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppStateNotifier extends ChangeNotifier {
   AppStateNotifier._();
@@ -78,62 +81,50 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
+      navigatorKey: appNavigatorKey,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? HomePageWidget() : StartPageWidget(),
+          appStateNotifier.loggedIn ? NavBarPage() : StartPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? HomePageWidget() : StartPageWidget(),
+              appStateNotifier.loggedIn ? NavBarPage() : StartPageWidget(),
         ),
         FFRoute(
-          name: 'StartPage',
-          path: '/startPage',
+          name: StartPageWidget.routeName,
+          path: StartPageWidget.routePath,
           builder: (context, params) => StartPageWidget(),
         ),
         FFRoute(
-          name: 'FillProfilePage',
-          path: '/fillProfilePage',
+          name: FillProfilePageWidget.routeName,
+          path: FillProfilePageWidget.routePath,
           builder: (context, params) => FillProfilePageWidget(),
         ),
         FFRoute(
-          name: 'SMSPage',
-          path: '/sMSPage',
-          builder: (context, params) => SMSPageWidget(),
-        ),
-        FFRoute(
-          name: 'ClubsPage',
-          path: '/clubsPage',
+          name: ClubsPageWidget.routeName,
+          path: ClubsPageWidget.routePath,
           asyncParams: {
             'clubsDoc': getDoc(['clubs'], ClubsRecord.fromSnapshot),
             'notification': getDoc(
                 ['users', 'notification'], NotificationRecord.fromSnapshot),
           },
-          builder: (context, params) => ClubsPageWidget(
-            clubsDoc: params.getParam(
-              'clubsDoc',
-              ParamType.Document,
-            ),
-            notification: params.getParam(
-              'notification',
-              ParamType.Document,
-            ),
-          ),
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'ClubsPage')
+              : ClubsPageWidget(
+                  clubsDoc: params.getParam(
+                    'clubsDoc',
+                    ParamType.Document,
+                  ),
+                  notification: params.getParam(
+                    'notification',
+                    ParamType.Document,
+                  ),
+                ),
         ),
         FFRoute(
-          name: 'Olympiad_Project_Page',
-          path: '/olympiadProjectPage',
-          builder: (context, params) => OlympiadProjectPageWidget(
-            color: params.getParam(
-              'color',
-              ParamType.Color,
-            ),
-          ),
-        ),
-        FFRoute(
-          name: 'notificationsPage',
-          path: '/notificationsPage',
+          name: NotificationsPageWidget.routeName,
+          path: NotificationsPageWidget.routePath,
           asyncParams: {
             'clubsDoc': getDoc(['clubs'], ClubsRecord.fromSnapshot),
             'notifications': getDoc(
@@ -156,22 +147,173 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'HomePage',
-          path: '/homePage',
-          builder: (context, params) => HomePageWidget(),
-        ),
-        FFRoute(
-          name: 'searchEvents',
-          path: '/searchEvents',
+          name: HomePageWidget.routeName,
+          path: HomePageWidget.routePath,
           asyncParams: {
             'events': getDoc(['events'], EventsRecord.fromSnapshot),
           },
-          builder: (context, params) => SearchEventsWidget(
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'HomePage')
+              : HomePageWidget(
+                  events: params.getParam(
+                    'events',
+                    ParamType.Document,
+                  ),
+                ),
+        ),
+        FFRoute(
+          name: LoadingPageWidget.routeName,
+          path: LoadingPageWidget.routePath,
+          builder: (context, params) => LoadingPageWidget(),
+        ),
+        FFRoute(
+          name: SMSPageWidget.routeName,
+          path: SMSPageWidget.routePath,
+          builder: (context, params) => SMSPageWidget(),
+        ),
+        FFRoute(
+          name: AdminPageWidget.routeName,
+          path: AdminPageWidget.routePath,
+          builder: (context, params) => AdminPageWidget(),
+        ),
+        FFRoute(
+          name: ProfilePageWidget.routeName,
+          path: ProfilePageWidget.routePath,
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'ProfilePage')
+              : ProfilePageWidget(),
+        ),
+        FFRoute(
+          name: OneEventPageWidget.routeName,
+          path: OneEventPageWidget.routePath,
+          asyncParams: {
+            'events': getDoc(['events'], EventsRecord.fromSnapshot),
+          },
+          builder: (context, params) => OneEventPageWidget(
             events: params.getParam(
               'events',
               ParamType.Document,
             ),
           ),
+        ),
+        FFRoute(
+          name: TeachersPageWidget.routeName,
+          path: TeachersPageWidget.routePath,
+          asyncParams: {
+            'notification': getDoc(
+                ['users', 'notification'], NotificationRecord.fromSnapshot),
+            'teachers': getDoc(['teachers'], TeachersRecord.fromSnapshot),
+          },
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'TeachersPage')
+              : TeachersPageWidget(
+                  notification: params.getParam(
+                    'notification',
+                    ParamType.Document,
+                  ),
+                  teachers: params.getParam(
+                    'teachers',
+                    ParamType.Document,
+                  ),
+                ),
+        ),
+        FFRoute(
+          name: EventsPageWidget.routeName,
+          path: EventsPageWidget.routePath,
+          asyncParams: {
+            'notification': getDoc(
+                ['users', 'notification'], NotificationRecord.fromSnapshot),
+            'events': getDoc(['events'], EventsRecord.fromSnapshot),
+          },
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'EventsPage')
+              : EventsPageWidget(
+                  notification: params.getParam(
+                    'notification',
+                    ParamType.Document,
+                  ),
+                  events: params.getParam(
+                    'events',
+                    ParamType.Document,
+                  ),
+                ),
+        ),
+        FFRoute(
+          name: TeacherfilterWidget.routeName,
+          path: TeacherfilterWidget.routePath,
+          asyncParams: {
+            'teachers': getDoc(['teachers'], TeachersRecord.fromSnapshot),
+          },
+          builder: (context, params) => TeacherfilterWidget(
+            teachers: params.getParam(
+              'teachers',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: OneClubPageWidget.routeName,
+          path: OneClubPageWidget.routePath,
+          asyncParams: {
+            'clubs': getDoc(['clubs'], ClubsRecord.fromSnapshot),
+          },
+          builder: (context, params) => OneClubPageWidget(
+            clubs: params.getParam(
+              'clubs',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: CreateClubPageWidget.routeName,
+          path: CreateClubPageWidget.routePath,
+          builder: (context, params) => CreateClubPageWidget(),
+        ),
+        FFRoute(
+          name: CreateEventPageWidget.routeName,
+          path: CreateEventPageWidget.routePath,
+          asyncParams: {
+            'club': getDoc(['clubs'], ClubsRecord.fromSnapshot),
+          },
+          builder: (context, params) => CreateEventPageWidget(
+            club: params.getParam(
+              'club',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: CreateTeacherPageWidget.routeName,
+          path: CreateTeacherPageWidget.routePath,
+          builder: (context, params) => CreateTeacherPageWidget(),
+        ),
+        FFRoute(
+          name: OneTeacherPageWidget.routeName,
+          path: OneTeacherPageWidget.routePath,
+          asyncParams: {
+            'teachers': getDoc(['teachers'], TeachersRecord.fromSnapshot),
+          },
+          builder: (context, params) => OneTeacherPageWidget(
+            teachers: params.getParam(
+              'teachers',
+              ParamType.Document,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: StoriesTeamWidget.routeName,
+          path: StoriesTeamWidget.routePath,
+          builder: (context, params) => StoriesTeamWidget(),
+        ),
+        FFRoute(
+          name: EventfilterWidget.routeName,
+          path: EventfilterWidget.routePath,
+          builder: (context, params) => EventfilterWidget(),
+        ),
+        FFRoute(
+          name: StoriesTeacherWidget.routeName,
+          path: StoriesTeacherWidget.routePath,
+          builder: (context, params) => StoriesTeacherWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -356,15 +498,11 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
+              ? Container(
+                  color: FlutterFlowTheme.of(context).mainColor,
+                  child: Image.asset(
+                    'assets/images/loading_screen1.png',
+                    fit: BoxFit.contain,
                   ),
                 )
               : page;
@@ -373,6 +511,7 @@ class FFRoute {
           return transitionInfo.hasTransition
               ? CustomTransitionPage(
                   key: state.pageKey,
+                  name: state.name,
                   child: child,
                   transitionDuration: transitionInfo.duration,
                   transitionsBuilder:
@@ -390,7 +529,8 @@ class FFRoute {
                     child,
                   ),
                 )
-              : MaterialPage(key: state.pageKey, child: child);
+              : MaterialPage(
+                  key: state.pageKey, name: state.name, child: child);
         },
         routes: routes,
       );

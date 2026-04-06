@@ -21,11 +21,6 @@ class TeachersRecord extends FirestoreRecord {
   String get name => _name ?? '';
   bool hasName() => _name != null;
 
-  // "surname" field.
-  String? _surname;
-  String get surname => _surname ?? '';
-  bool hasSurname() => _surname != null;
-
   // "image" field.
   String? _image;
   String get image => _image ?? '';
@@ -41,24 +36,47 @@ class TeachersRecord extends FirestoreRecord {
   String get achievments => _achievments ?? '';
   bool hasAchievments() => _achievments != null;
 
-  // "isOlympiad" field.
-  bool? _isOlympiad;
-  bool get isOlympiad => _isOlympiad ?? false;
-  bool hasIsOlympiad() => _isOlympiad != null;
+  // "typeofactivity" field.
+  String? _typeofactivity;
+  String get typeofactivity => _typeofactivity ?? '';
+  bool hasTypeofactivity() => _typeofactivity != null;
 
-  // "isProject" field.
-  bool? _isProject;
-  bool get isProject => _isProject ?? false;
-  bool hasIsProject() => _isProject != null;
+  // "cabinet" field.
+  String? _cabinet;
+  String get cabinet => _cabinet ?? '';
+  bool hasCabinet() => _cabinet != null;
+
+  // "experience_years" field.
+  int? _experienceYears;
+  int get experienceYears => _experienceYears ?? 0;
+  bool hasExperienceYears() => _experienceYears != null;
+
+  // "teacher_liked_by" field.
+  List<DocumentReference>? _teacherLikedBy;
+  List<DocumentReference> get teacherLikedBy => _teacherLikedBy ?? const [];
+  bool hasTeacherLikedBy() => _teacherLikedBy != null;
+
+  // "creator" field.
+  DocumentReference? _creator;
+  DocumentReference? get creator => _creator;
+  bool hasCreator() => _creator != null;
+
+  // "contacts" field.
+  String? _contacts;
+  String get contacts => _contacts ?? '';
+  bool hasContacts() => _contacts != null;
 
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
-    _surname = snapshotData['surname'] as String?;
     _image = snapshotData['image'] as String?;
     _subject = snapshotData['subject'] as String?;
     _achievments = snapshotData['achievments'] as String?;
-    _isOlympiad = snapshotData['isOlympiad'] as bool?;
-    _isProject = snapshotData['isProject'] as bool?;
+    _typeofactivity = snapshotData['typeofactivity'] as String?;
+    _cabinet = snapshotData['cabinet'] as String?;
+    _experienceYears = castToType<int>(snapshotData['experience_years']);
+    _teacherLikedBy = getDataList(snapshotData['teacher_liked_by']);
+    _creator = snapshotData['creator'] as DocumentReference?;
+    _contacts = snapshotData['contacts'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -97,22 +115,26 @@ class TeachersRecord extends FirestoreRecord {
 
 Map<String, dynamic> createTeachersRecordData({
   String? name,
-  String? surname,
   String? image,
   String? subject,
   String? achievments,
-  bool? isOlympiad,
-  bool? isProject,
+  String? typeofactivity,
+  String? cabinet,
+  int? experienceYears,
+  DocumentReference? creator,
+  String? contacts,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'name': name,
-      'surname': surname,
       'image': image,
       'subject': subject,
       'achievments': achievments,
-      'isOlympiad': isOlympiad,
-      'isProject': isProject,
+      'typeofactivity': typeofactivity,
+      'cabinet': cabinet,
+      'experience_years': experienceYears,
+      'creator': creator,
+      'contacts': contacts,
     }.withoutNulls,
   );
 
@@ -124,24 +146,31 @@ class TeachersRecordDocumentEquality implements Equality<TeachersRecord> {
 
   @override
   bool equals(TeachersRecord? e1, TeachersRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.name == e2?.name &&
-        e1?.surname == e2?.surname &&
         e1?.image == e2?.image &&
         e1?.subject == e2?.subject &&
         e1?.achievments == e2?.achievments &&
-        e1?.isOlympiad == e2?.isOlympiad &&
-        e1?.isProject == e2?.isProject;
+        e1?.typeofactivity == e2?.typeofactivity &&
+        e1?.cabinet == e2?.cabinet &&
+        e1?.experienceYears == e2?.experienceYears &&
+        listEquality.equals(e1?.teacherLikedBy, e2?.teacherLikedBy) &&
+        e1?.creator == e2?.creator &&
+        e1?.contacts == e2?.contacts;
   }
 
   @override
   int hash(TeachersRecord? e) => const ListEquality().hash([
         e?.name,
-        e?.surname,
         e?.image,
         e?.subject,
         e?.achievments,
-        e?.isOlympiad,
-        e?.isProject
+        e?.typeofactivity,
+        e?.cabinet,
+        e?.experienceYears,
+        e?.teacherLikedBy,
+        e?.creator,
+        e?.contacts
       ]);
 
   @override

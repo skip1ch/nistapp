@@ -7,7 +7,9 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/flutter_flow/upload_data.dart';
+import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,9 @@ export 'fill_profile_page_model.dart';
 
 class FillProfilePageWidget extends StatefulWidget {
   const FillProfilePageWidget({super.key});
+
+  static String routeName = 'FillProfilePage';
+  static String routePath = '/fillProfilePage';
 
   @override
   State<FillProfilePageWidget> createState() => _FillProfilePageWidgetState();
@@ -47,7 +52,10 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -66,26 +74,50 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                     Text(
                       'Профиль',
                       style: FlutterFlowTheme.of(context).displaySmall.override(
-                            fontFamily: 'Lato',
+                            font: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .displaySmall
+                                  .fontStyle,
+                            ),
+                            fontSize: 15.0,
                             letterSpacing: 0.0,
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .displaySmall
+                                .fontStyle,
                           ),
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 20.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 30.0),
                       child: Text(
                         'Заполните информацию о себе',
                         style:
                             FlutterFlowTheme.of(context).headlineLarge.override(
-                                  fontFamily: 'Outfit',
+                                  font: GoogleFonts.montserrat(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .headlineLarge
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .headlineLarge
+                                        .fontStyle,
+                                  ),
                                   fontSize: 18.0,
                                   letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .headlineLarge
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .headlineLarge
+                                      .fontStyle,
                                 ),
                       ),
                     ),
                     Stack(
                       children: [
-                        if (functions.photoIsEmpty(_model.uploadedFileUrl))
+                        if (functions
+                            .photoIsEmpty(_model.uploadedFileUrl_uploadDataIvr))
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: InkWell(
@@ -104,8 +136,8 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                                     selectedMedia.every((m) =>
                                         validateFileFormat(
                                             m.storagePath, context))) {
-                                  safeSetState(
-                                      () => _model.isDataUploading = true);
+                                  safeSetState(() => _model
+                                      .isDataUploading_uploadDataIvr = true);
                                   var selectedUploadedFiles =
                                       <FFUploadedFile>[];
 
@@ -119,6 +151,8 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                                               height: m.dimensions?.height,
                                               width: m.dimensions?.width,
                                               blurHash: m.blurHash,
+                                              originalFilename:
+                                                  m.originalFilename,
                                             ))
                                         .toList();
 
@@ -132,16 +166,17 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                                         .map((u) => u!)
                                         .toList();
                                   } finally {
-                                    _model.isDataUploading = false;
+                                    _model.isDataUploading_uploadDataIvr =
+                                        false;
                                   }
                                   if (selectedUploadedFiles.length ==
                                           selectedMedia.length &&
                                       downloadUrls.length ==
                                           selectedMedia.length) {
                                     safeSetState(() {
-                                      _model.uploadedLocalFile =
+                                      _model.uploadedLocalFile_uploadDataIvr =
                                           selectedUploadedFiles.first;
-                                      _model.uploadedFileUrl =
+                                      _model.uploadedFileUrl_uploadDataIvr =
                                           downloadUrls.first;
                                     });
                                   } else {
@@ -164,7 +199,8 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                               ),
                             ),
                           ),
-                        if (!functions.photoIsEmpty(_model.uploadedFileUrl))
+                        if (!functions
+                            .photoIsEmpty(_model.uploadedFileUrl_uploadDataIvr))
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
@@ -175,7 +211,7 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                                 shape: BoxShape.circle,
                               ),
                               child: Image.network(
-                                _model.uploadedFileUrl,
+                                _model.uploadedFileUrl_uploadDataIvr,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -184,7 +220,7 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(8.0, 20.0, 8.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(8.0, 50.0, 8.0, 0.0),
                       child: TextFormField(
                         controller: _model.textController,
                         focusNode: _model.textFieldFocusNode,
@@ -196,27 +232,42 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                         autofocus: true,
                         obscureText: false,
                         decoration: InputDecoration(
-                          labelStyle:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    fontFamily: 'Readex Pro',
-                                    letterSpacing: 0.0,
-                                  ),
+                          labelStyle: FlutterFlowTheme.of(context)
+                              .labelMedium
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .labelMediumFamily,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .labelMediumIsCustom,
+                              ),
                           hintText: 'Введите ваше имя',
                           hintStyle:
-                              FlutterFlowTheme.of(context).labelMedium.override(
-                                    fontFamily: 'Readex Pro',
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    font: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: Color(0xFF7A7A7A),
+                                    fontSize: 14.0,
                                     letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
                                   ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).secondaryText,
+                              color: Color(0xFFC4B9B9),
                               width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).primary,
+                              color: Color(0xFFC4B9B9),
                               width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
@@ -237,8 +288,11 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                           ),
                         ),
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Readex Pro',
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).bodyMediumFamily,
                               letterSpacing: 0.0,
+                              useGoogleFonts: !FlutterFlowTheme.of(context)
+                                  .bodyMediumIsCustom,
                             ),
                         validator:
                             _model.textControllerValidator.asValidator(context),
@@ -246,7 +300,7 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(8.0, 26.0, 8.0, 0.0),
                       child: FlutterFlowDropDown<int>(
                         controller: _model.dropDown1ValueController ??=
                             FormFieldController<int>(null),
@@ -254,24 +308,34 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                         optionLabels: ['7', '8', '9', '10', '11', '12'],
                         onChanged: (val) =>
                             safeSetState(() => _model.dropDown1Value = val),
-                        width: 300.0,
-                        height: 50.0,
+                        height: 52.0,
                         textStyle:
                             FlutterFlowTheme.of(context).bodyMedium.override(
-                                  fontFamily: 'Readex Pro',
+                                  font: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: Color(0xFF7A7A7A),
+                                  fontSize: 14.0,
                                   letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
                                 ),
                         hintText: 'Выберите номер класса',
                         icon: Icon(
                           Icons.keyboard_arrow_down_rounded,
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                          color: Color(0xFF7A7A7A),
                           size: 24.0,
                         ),
                         fillColor:
                             FlutterFlowTheme.of(context).secondaryBackground,
                         elevation: 2.0,
                         borderColor: FlutterFlowTheme.of(context).alternate,
-                        borderWidth: 2.0,
+                        borderWidth: 1.5,
                         borderRadius: 8.0,
                         margin: EdgeInsetsDirectional.fromSTEB(
                             16.0, 4.0, 16.0, 4.0),
@@ -283,7 +347,7 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(8.0, 26.0, 8.0, 0.0),
                       child: FlutterFlowDropDown<String>(
                         controller: _model.dropDown2ValueController ??=
                             FormFieldController<String>(
@@ -304,24 +368,34 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                         ],
                         onChanged: (val) =>
                             safeSetState(() => _model.dropDown2Value = val),
-                        width: 300.0,
-                        height: 50.0,
+                        height: 52.0,
                         textStyle:
                             FlutterFlowTheme.of(context).bodyMedium.override(
-                                  fontFamily: 'Readex Pro',
+                                  font: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: Color(0xFF7A7A7A),
+                                  fontSize: 14.0,
                                   letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
                                 ),
                         hintText: 'Выберите литер класса',
                         icon: Icon(
                           Icons.keyboard_arrow_down_rounded,
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                          color: Color(0xFF7A7A7A),
                           size: 24.0,
                         ),
                         fillColor:
                             FlutterFlowTheme.of(context).secondaryBackground,
                         elevation: 2.0,
                         borderColor: FlutterFlowTheme.of(context).alternate,
-                        borderWidth: 2.0,
+                        borderWidth: 1.5,
                         borderRadius: 8.0,
                         margin: EdgeInsetsDirectional.fromSTEB(
                             16.0, 4.0, 16.0, 4.0),
@@ -333,7 +407,7 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 50.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
                           if (functions
@@ -345,7 +419,7 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                               context: context,
                               builder: (alertDialogContext) {
                                 return AlertDialog(
-                                  title: Text('Имя обязательно!'),
+                                  title: Text('Заполните все поля!'),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
@@ -361,13 +435,13 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                             await currentUserReference!
                                 .update(createUsersRecordData(
                               name: _model.textController.text,
-                              image: _model.uploadedFileUrl,
+                              image: _model.uploadedFileUrl_uploadDataIvr,
                               profileIsFull: true,
                               liter: _model.dropDown2Value,
                               grade: _model.dropDown1Value,
                             ));
 
-                            context.goNamed('HomePage');
+                            context.goNamed(HomePageWidget.routeName);
                           }
                         },
                         text: 'Сохранить',
@@ -383,21 +457,22 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                                   (_model.dropDown1Value == null) &&
                                   (_model.dropDown2Value == null ||
                                       _model.dropDown2Value == '')
-                              ? FlutterFlowTheme.of(context).passiveColor
-                              : FlutterFlowTheme.of(context).mainColor,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Readex Pro',
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                  ),
+                              ? Color(0x37000000)
+                              : FlutterFlowTheme.of(context).black,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleSmall
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .titleSmallFamily,
+                                color: Colors.white,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .titleSmallIsCustom,
+                              ),
                           elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
+                        showLoadingIndicator: false,
                       ),
                     ),
                     Align(
@@ -418,10 +493,24 @@ class _FillProfilePageWidgetState extends State<FillProfilePageWidget> {
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  fontFamily: 'Readex Pro',
+                                  font: GoogleFonts.montserrat(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryText,
+                                  fontSize: 14.0,
                                   letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
                                 ),
                           ),
                         ),

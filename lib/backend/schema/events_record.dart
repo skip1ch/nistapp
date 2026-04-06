@@ -81,6 +81,21 @@ class EventsRecord extends FirestoreRecord {
   DateTime? get ddate => _ddate;
   bool hasDdate() => _ddate != null;
 
+  // "creator_image" field.
+  String? _creatorImage;
+  String get creatorImage => _creatorImage ?? '';
+  bool hasCreatorImage() => _creatorImage != null;
+
+  // "entry_grade" field.
+  String? _entryGrade;
+  String get entryGrade => _entryGrade ?? '';
+  bool hasEntryGrade() => _entryGrade != null;
+
+  // "type" field.
+  String? _type;
+  String get type => _type ?? '';
+  bool hasType() => _type != null;
+
   void _initializeFields() {
     _name = snapshotData['name'] as String?;
     _info = snapshotData['info'] as String?;
@@ -95,6 +110,9 @@ class EventsRecord extends FirestoreRecord {
     _creator = snapshotData['creator'] as DocumentReference?;
     _eventLikedBy = getDataList(snapshotData['event_liked_by']);
     _ddate = snapshotData['ddate'] as DateTime?;
+    _creatorImage = snapshotData['creator_image'] as String?;
+    _entryGrade = snapshotData['entry_grade'] as String?;
+    _type = snapshotData['type'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -143,6 +161,9 @@ Map<String, dynamic> createEventsRecordData({
   String? creatorLiter,
   DocumentReference? creator,
   DateTime? ddate,
+  String? creatorImage,
+  String? entryGrade,
+  String? type,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -158,6 +179,9 @@ Map<String, dynamic> createEventsRecordData({
       'creator_liter': creatorLiter,
       'creator': creator,
       'ddate': ddate,
+      'creator_image': creatorImage,
+      'entry_grade': entryGrade,
+      'type': type,
     }.withoutNulls,
   );
 
@@ -182,7 +206,10 @@ class EventsRecordDocumentEquality implements Equality<EventsRecord> {
         e1?.creatorLiter == e2?.creatorLiter &&
         e1?.creator == e2?.creator &&
         listEquality.equals(e1?.eventLikedBy, e2?.eventLikedBy) &&
-        e1?.ddate == e2?.ddate;
+        e1?.ddate == e2?.ddate &&
+        e1?.creatorImage == e2?.creatorImage &&
+        e1?.entryGrade == e2?.entryGrade &&
+        e1?.type == e2?.type;
   }
 
   @override
@@ -199,7 +226,10 @@ class EventsRecordDocumentEquality implements Equality<EventsRecord> {
         e?.creatorLiter,
         e?.creator,
         e?.eventLikedBy,
-        e?.ddate
+        e?.ddate,
+        e?.creatorImage,
+        e?.entryGrade,
+        e?.type
       ]);
 
   @override

@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
@@ -25,6 +26,9 @@ class NotificationsPageWidget extends StatefulWidget {
   final NotificationRecord? notifications;
   final UsersRecord? usersDoc;
 
+  static String routeName = 'notificationsPage';
+  static String routePath = '/notificationsPage';
+
   @override
   State<NotificationsPageWidget> createState() =>
       _NotificationsPageWidgetState();
@@ -42,7 +46,11 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(
+        Duration(
+          milliseconds: 500,
+        ),
+      );
       _model.recentNotification = await queryNotificationRecordOnce(
         queryBuilder: (notificationRecord) =>
             notificationRecord.orderBy('timestamp', descending: true),
@@ -65,7 +73,10 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -84,15 +95,21 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
             child: Icon(
               Icons.chevron_left,
               color: Colors.black,
-              size: 30.0,
+              size: 34.0,
             ),
           ),
           title: Text(
             'Уведомления',
             style: FlutterFlowTheme.of(context).headlineSmall.override(
-                  fontFamily: 'Montserrat Alternates',
+                  font: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w600,
+                    fontStyle:
+                        FlutterFlowTheme.of(context).headlineSmall.fontStyle,
+                  ),
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w600,
+                  fontStyle:
+                      FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                 ),
           ),
           actions: [],
@@ -121,11 +138,11 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                         if (!snapshot.hasData) {
                           return Center(
                             child: SizedBox(
-                              width: 50.0,
-                              height: 50.0,
+                              width: 30.0,
+                              height: 30.0,
                               child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  FlutterFlowTheme.of(context).primary,
+                                  FlutterFlowTheme.of(context).mainColor,
                                 ),
                               ),
                             ),
@@ -134,17 +151,11 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                         List<NotificationRecord>
                             listViewNotificationRecordList = snapshot.data!;
 
-                        return ListView.separated(
-                          padding: EdgeInsets.fromLTRB(
-                            0,
-                            0,
-                            0,
-                            50.0,
-                          ),
+                        return ListView.builder(
+                          padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemCount: listViewNotificationRecordList.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 12.0),
                           itemBuilder: (context, listViewIndex) {
                             final listViewNotificationRecord =
                                 listViewNotificationRecordList[listViewIndex];
@@ -153,7 +164,7 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                   listViewNotificationRecord.individual,
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    5.0, 0.0, 5.0, 0.0),
+                                    8.0, 0.0, 8.0, 14.0),
                                 child: StreamBuilder<UsersRecord>(
                                   stream: UsersRecord.getDocument(
                                       listViewNotificationRecord.userid!),
@@ -162,13 +173,13 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                     if (!snapshot.hasData) {
                                       return Center(
                                         child: SizedBox(
-                                          width: 50.0,
-                                          height: 50.0,
+                                          width: 30.0,
+                                          height: 30.0,
                                           child: CircularProgressIndicator(
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
                                               FlutterFlowTheme.of(context)
-                                                  .primary,
+                                                  .mainColor,
                                             ),
                                           ),
                                         ),
@@ -188,6 +199,8 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
                                           Padding(
                                             padding:
@@ -202,8 +215,8 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                                 if (!snapshot.hasData) {
                                                   return Center(
                                                     child: SizedBox(
-                                                      width: 50.0,
-                                                      height: 50.0,
+                                                      width: 30.0,
+                                                      height: 30.0,
                                                       child:
                                                           CircularProgressIndicator(
                                                         valueColor:
@@ -211,7 +224,7 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                                                 Color>(
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .primary,
+                                                              .mainColor,
                                                         ),
                                                       ),
                                                     ),
@@ -229,211 +242,56 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Image.network(
-                                                    circleImageClubsRecord.logo,
+                                                    valueOrDefault<String>(
+                                                      circleImageClubsRecord
+                                                          .logo,
+                                                      'https://images.squarespace-cdn.com/content/v1/5bda2eff25bf024df30171b0/1613394654498-K6AD5QOTDHWMNDWSNSRR/UN+logo.png?format=1500w',
+                                                    ),
                                                     fit: BoxFit.cover,
                                                   ),
                                                 );
                                               },
                                             ),
                                           ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    10.0, 0.0, 0.0, 0.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                StreamBuilder<ClubsRecord>(
-                                                  stream: ClubsRecord.getDocument(
-                                                      listViewNotificationRecord
-                                                          .clubid!),
-                                                  builder: (context, snapshot) {
-                                                    // Customize what your widget looks like when it's loading.
-                                                    if (!snapshot.hasData) {
-                                                      return Center(
-                                                        child: SizedBox(
-                                                          width: 50.0,
-                                                          height: 50.0,
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            valueColor:
-                                                                AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .primary,
+                                          Flexible(
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(8.0, 6.0, 8.0, 0.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  StreamBuilder<ClubsRecord>(
+                                                    stream: ClubsRecord.getDocument(
+                                                        listViewNotificationRecord
+                                                            .clubid!),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 30.0,
+                                                            height: 30.0,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .mainColor,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    }
+                                                        );
+                                                      }
 
-                                                    final richTextClubsRecord =
-                                                        snapshot.data!;
+                                                      final richTextClubsRecord =
+                                                          snapshot.data!;
 
-                                                    return RichText(
-                                                      textScaler:
-                                                          MediaQuery.of(context)
-                                                              .textScaler,
-                                                      text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: 'В ваш клуб',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .black,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: ' - \"',
-                                                            style: TextStyle(),
-                                                          ),
-                                                          TextSpan(
-                                                            text:
-                                                                richTextClubsRecord
-                                                                    .name,
-                                                            style: TextStyle(),
-                                                          ),
-                                                          TextSpan(
-                                                            text: '\"',
-                                                            style: TextStyle(),
-                                                          )
-                                                        ],
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                                RichText(
-                                                  textScaler:
-                                                      MediaQuery.of(context)
-                                                          .textScaler,
-                                                  text: TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text:
-                                                            'хочет вступить - ',
-                                                        style: TextStyle(),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            containerUsersRecord
-                                                                .name,
-                                                        style: TextStyle(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .black,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          fontStyle:
-                                                              FontStyle.normal,
-                                                        ),
-                                                      ),
-                                                      TextSpan(
-                                                        text: ' ',
-                                                        style: TextStyle(),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            containerUsersRecord
-                                                                .grade
-                                                                .toString(),
-                                                        style: TextStyle(),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            containerUsersRecord
-                                                                .liter,
-                                                        style: TextStyle(),
-                                                      )
-                                                    ],
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Readex Pro',
-                                                          letterSpacing: 0.0,
-                                                        ),
-                                                  ),
-                                                ),
-                                                RichText(
-                                                  textScaler:
-                                                      MediaQuery.of(context)
-                                                          .textScaler,
-                                                  text: TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text:
-                                                            'Номер телефона: ',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .black,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            containerUsersRecord
-                                                                .phoneNumber,
-                                                        style: TextStyle(),
-                                                      )
-                                                    ],
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Readex Pro',
-                                                          letterSpacing: 0.0,
-                                                        ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 5.0, 0.0, 0.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      RichText(
+                                                      return RichText(
                                                         textScaler:
                                                             MediaQuery.of(
                                                                     context)
@@ -441,58 +299,377 @@ class _NotificationsPageWidgetState extends State<NotificationsPageWidget> {
                                                         text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                              text: dateTimeFormat(
-                                                                  "d/M H:mm",
-                                                                  listViewNotificationRecord
-                                                                      .timestamp!),
+                                                              text:
+                                                                  'В ваш клуб',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .labelSmall
+                                                                  .bodyMedium
                                                                   .override(
-                                                                    fontFamily:
-                                                                        'Readex Pro',
+                                                                    font: GoogleFonts
+                                                                        .montserrat(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .fontStyle,
+                                                                    ),
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .black,
+                                                                    fontSize:
+                                                                        14.0,
                                                                     letterSpacing:
                                                                         0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
                                                                   ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: ' - \"',
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text:
+                                                                  richTextClubsRecord
+                                                                      .name,
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 14.0,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                              text: '\"',
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 14.0,
+                                                              ),
                                                             )
                                                           ],
                                                           style: FlutterFlowTheme
                                                                   .of(context)
-                                                              .labelSmall
+                                                              .bodyMedium
                                                               .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
                                                                 letterSpacing:
                                                                     0.0,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMediumIsCustom,
                                                               ),
                                                         ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    83.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Text(
-                                                          'Свяжитесь с этим человеком',
+                                                      );
+                                                    },
+                                                  ),
+                                                  RichText(
+                                                    textScaler:
+                                                        MediaQuery.of(context)
+                                                            .textScaler,
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text:
+                                                              'хочет вступить - ',
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text:
+                                                              containerUsersRecord
+                                                                  .name,
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14.0,
+                                                            fontStyle: FontStyle
+                                                                .normal,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: ' ',
+                                                          style: TextStyle(),
+                                                        ),
+                                                        TextSpan(
+                                                          text:
+                                                              containerUsersRecord
+                                                                  .grade
+                                                                  .toString(),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text:
+                                                              containerUsersRecord
+                                                                  .liter,
+                                                          style: TextStyle(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        )
+                                                      ],
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                            letterSpacing: 0.0,
+                                                            useGoogleFonts:
+                                                                !FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumIsCustom,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  RichText(
+                                                    textScaler:
+                                                        MediaQuery.of(context)
+                                                            .textScaler,
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text:
+                                                              'Номер телефона: ',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
                                                               .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                fontSize: 12.0,
+                                                                font: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .black,
+                                                                fontSize: 14.0,
                                                                 letterSpacing:
                                                                     0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontStyle: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
                                                               ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                        TextSpan(
+                                                          text:
+                                                              containerUsersRecord
+                                                                  .phoneNumber,
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        )
+                                                      ],
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                            letterSpacing: 0.0,
+                                                            useGoogleFonts:
+                                                                !FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumIsCustom,
+                                                          ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                  Flexible(
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  4.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          RichText(
+                                                            textScaler:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .textScaler,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text:
+                                                                      dateTimeFormat(
+                                                                    "d/M H:mm",
+                                                                    listViewNotificationRecord
+                                                                        .timestamp!,
+                                                                    locale: FFLocalizations.of(
+                                                                            context)
+                                                                        .languageCode,
+                                                                  ),
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelSmall
+                                                                      .override(
+                                                                        font: GoogleFonts
+                                                                            .montserrat(
+                                                                          fontWeight: FlutterFlowTheme.of(context)
+                                                                              .labelSmall
+                                                                              .fontWeight,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .labelSmall
+                                                                              .fontStyle,
+                                                                        ),
+                                                                        fontSize:
+                                                                            12.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        fontWeight: FlutterFlowTheme.of(context)
+                                                                            .labelSmall
+                                                                            .fontWeight,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .labelSmall
+                                                                            .fontStyle,
+                                                                      ),
+                                                                )
+                                                              ],
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .labelSmall
+                                                                  .override(
+                                                                    font: GoogleFonts
+                                                                        .montserrat(
+                                                                      fontWeight: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelSmall
+                                                                          .fontWeight,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelSmall
+                                                                          .fontStyle,
+                                                                    ),
+                                                                    fontSize:
+                                                                        12.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelSmall
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .labelSmall
+                                                                        .fontStyle,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            'Свяжитесь с этим человеком',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  fontSize:
+                                                                      12.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontWeight,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],
